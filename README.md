@@ -1,3 +1,5 @@
+# Data is downloaded from
+https://synthea.mitre.org/downloads?utm_source=chatgpt.com
 # Clinical NLP Benchmarking
 
 Benchmark ClinicalBERT on synthetic Synthea patient classification tasks.
