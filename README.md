@@ -31,16 +31,57 @@ Outputs are written under `benchmark_runs/`.
 
 ## Plot Scores
 
-Save a Matplotlib chart from the saved benchmark metrics:
+Save a Matplotlib comparison chart from multiple saved benchmark metrics:
 
 ```bash
 python clinical_bert_test.py plot \
   --output-dir benchmark_runs \
-  --runs baseline clinicalbert
+  --runs baseline clinicalbert small_llm
 ```
 
 The chart is written to `benchmark_runs/plots/scores.png`, and the plotted
 values are also written to `benchmark_runs/plots/score_summary.csv`.
+
+## Small LLM Prompting Benchmark
+
+Use the same prepared patient `test.csv` files with a local OpenAI-compatible
+small LLM server, such as LM Studio:
+
+```bash
+python small_llm_benchmarking.py \
+  --prepared-dir benchmark_runs/prepared \
+  --tasks diabetes hypertension \
+  --split test \
+  --shots zero one \
+  --output-dir benchmark_runs/small_llm
+```
+
+Defaults:
+
+- `--base-url http://localhost:1233/v1`
+- `--api-key lm-studio`
+- `--model google/gemma-4-e4b`
+
+Run a quick smoke test first:
+
+```bash
+python small_llm_benchmarking.py \
+  --tasks diabetes \
+  --shots zero \
+  --limit 3 \
+  --output-dir benchmark_runs/small_llm
+```
+
+Outputs:
+
+- `benchmark_runs/small_llm/<task>/<shot>_shot_predictions.csv`
+- `benchmark_runs/small_llm/<task>/<shot>_shot_metrics.json`
+- `benchmark_runs/small_llm/metrics.json`
+- `benchmark_runs/small_llm/plots/scores.png`
+
+Small LLM runs create their own plot by default. Use `--no-plot` to skip it.
+Only use `clinical_bert_test.py plot --runs ... small_llm` when you explicitly
+want a comparison chart against ClinicalBERT or the TF-IDF baseline.
 
 ## Raw ClinicalBERT Output
 

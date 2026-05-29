@@ -1122,8 +1122,20 @@ def display_run_name(name: str) -> str:
         "baseline": "TF-IDF baseline",
         "clinicalbert": "ClinicalBERT fine-tuned",
         "clinicalbert_inference": "ClinicalBERT inference",
+        "small_llm": "Small LLM",
     }
     return names.get(name, name.replace("_", " ").title())
+
+
+def normalize_plot_record(run_name: str, task_name: str) -> tuple[str, str]:
+    if run_name == "small_llm":
+        for suffix, label in [
+            ("_zero_shot", "Small LLM zero-shot"),
+            ("_one_shot", "Small LLM one-shot"),
+        ]:
+            if task_name.endswith(suffix):
+                return task_name[: -len(suffix)], label
+    return task_name, display_run_name(run_name)
 
 
 def load_score_records(
@@ -1140,6 +1152,7 @@ def load_score_records(
         with metrics_path.open("r", encoding="utf-8") as handle:
             data = json.load(handle)
         for task_name, task_metrics in data.get("tasks", {}).items():
+            plot_task_name, model_name = normalize_plot_record(run_name, task_name)
             for metric_name in metrics:
                 value = task_metrics.get(metric_name)
                 if value is None:
@@ -1147,8 +1160,8 @@ def load_score_records(
                 records.append(
                     {
                         "run": run_name,
-                        "model": display_run_name(run_name),
-                        "task": task_name,
+                        "model": model_name,
+                        "task": plot_task_name,
                         "metric": metric_name,
                         "score": float(value),
                     }
@@ -1193,6 +1206,7 @@ def run_plot(args: argparse.Namespace) -> Path:
         "accuracy": "Accuracy",
         "precision": "Precision",
         "recall": "Recall",
+        "specificity": "Specificity",
         "f1": "F1",
         "macro_f1": "Macro F1",
         "roc_auc": "ROC AUC",
@@ -1558,7 +1572,7 @@ def add_plot_args(parser: argparse.ArgumentParser) -> None:
         "--runs",
         nargs="*",
         default=None,
-        help="Metric run directories to include, for example baseline clinicalbert.",
+        help="Metric run directories to include, for example baseline clinicalbert small_llm.",
     )
     parser.add_argument(
         "--metrics",
