@@ -1,0 +1,15 @@
+{
+    "total_attempted": 750,
+    "classified": 750,
+    "correct": 511,
+    "incorrect": 239,
+    "true_positive": 153,
+    "true_negative": 358,
+    "false_positive": 17,
+    "false_negative": 222,
+    "accuracy": 0.6813333333333333,
+    "precision": 0.9,
+    "recall": 0.408,
+    "f1": 0.5614678899082569,
+    "ROC AUC": 0.7842560000000001
+}
