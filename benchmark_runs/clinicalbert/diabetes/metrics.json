@@ -1,45 +1,45 @@
 {
-  "accuracy": 0.9466666666666667,
-  "precision": 0.9855072463768116,
-  "recall": 0.9066666666666666,
-  "f1": 0.9444444444444444,
-  "macro_f1": 0.9465811965811965,
-  "support": 150,
-  "positive_support": 75,
-  "negative_support": 75,
-  "roc_auc": 0.9873777777777778,
-  "test_loss": 0.18957108867665132,
+  "accuracy": 0.9413333333333334,
+  "precision": 1.0,
+  "recall": 0.8826666666666667,
+  "f1": 0.9376770538243626,
+  "macro_f1": 0.9411307183479496,
+  "support": 750,
+  "positive_support": 375,
+  "negative_support": 375,
+  "roc_auc": 0.982976,
+  "test_loss": 0.21192533468951782,
   "history": [
     {
       "epoch": 1,
-      "train_loss": 0.440880873969623,
-      "val_loss": 0.273038099805514,
+      "train_loss": 0.22316082063024598,
+      "val_loss": 0.16854011447479328,
       "val_metrics": {
-        "accuracy": 0.92,
-        "precision": 0.9701492537313433,
-        "recall": 0.8666666666666667,
-        "f1": 0.9154929577464789,
-        "macro_f1": 0.9197717953289357,
-        "support": 150,
-        "positive_support": 75,
-        "negative_support": 75,
-        "roc_auc": 0.9507555555555556
+        "accuracy": 0.9533333333333334,
+        "precision": 1.0,
+        "recall": 0.9066666666666666,
+        "f1": 0.951048951048951,
+        "macro_f1": 0.9532314818939023,
+        "support": 750,
+        "positive_support": 375,
+        "negative_support": 375,
+        "roc_auc": 0.9877119999999999
       }
     },
     {
       "epoch": 2,
-      "train_loss": 0.16601775396083082,
-      "val_loss": 0.2721674547592799,
+      "train_loss": 0.11310882073481168,
+      "val_loss": 0.15285386623317998,
       "val_metrics": {
-        "accuracy": 0.9333333333333333,
+        "accuracy": 0.9533333333333334,
         "precision": 1.0,
-        "recall": 0.8666666666666667,
-        "f1": 0.9285714285714286,
-        "macro_f1": 0.9330357142857143,
-        "support": 150,
-        "positive_support": 75,
-        "negative_support": 75,
-        "roc_auc": 0.9656888888888889
+        "recall": 0.9066666666666666,
+        "f1": 0.951048951048951,
+        "macro_f1": 0.9532314818939023,
+        "support": 750,
+        "positive_support": 375,
+        "negative_support": 375,
+        "roc_auc": 0.990855111111111
       }
     }
   ]

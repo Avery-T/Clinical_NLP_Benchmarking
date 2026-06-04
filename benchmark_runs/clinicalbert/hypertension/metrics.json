@@ -1,45 +1,45 @@
 {
-  "accuracy": 0.8466666666666667,
-  "precision": 0.825,
-  "recall": 0.88,
-  "f1": 0.8516129032258064,
-  "macro_f1": 0.846496106785317,
-  "support": 150,
-  "positive_support": 75,
-  "negative_support": 75,
-  "roc_auc": 0.907911111111111,
-  "test_loss": 0.393995734055837,
+  "accuracy": 0.912,
+  "precision": 0.8618266978922716,
+  "recall": 0.9813333333333333,
+  "f1": 0.9177057356608479,
+  "macro_f1": 0.9115749308676733,
+  "support": 750,
+  "positive_support": 375,
+  "negative_support": 375,
+  "roc_auc": 0.9761208888888889,
+  "test_loss": 0.24656536277135213,
   "history": [
     {
       "epoch": 1,
-      "train_loss": 0.557315867798669,
-      "val_loss": 0.42225644409656526,
+      "train_loss": 0.3729048761299678,
+      "val_loss": 0.19372319781780242,
       "val_metrics": {
-        "accuracy": 0.8133333333333334,
-        "precision": 0.7582417582417582,
-        "recall": 0.92,
-        "f1": 0.8313253012048193,
-        "macro_f1": 0.8111850386621111,
-        "support": 150,
-        "positive_support": 75,
-        "negative_support": 75,
-        "roc_auc": 0.9038222222222222
+        "accuracy": 0.9346666666666666,
+        "precision": 0.8975609756097561,
+        "recall": 0.9813333333333333,
+        "f1": 0.9375796178343949,
+        "macro_f1": 0.9345240746514631,
+        "support": 750,
+        "positive_support": 375,
+        "negative_support": 375,
+        "roc_auc": 0.9834879999999999
       }
     },
     {
       "epoch": 2,
-      "train_loss": 0.36340649675045694,
-      "val_loss": 0.38119805256525674,
+      "train_loss": 0.2054572566146297,
+      "val_loss": 0.20874880193670592,
       "val_metrics": {
-        "accuracy": 0.8066666666666666,
-        "precision": 0.8026315789473685,
-        "recall": 0.8133333333333334,
-        "f1": 0.8079470198675497,
-        "macro_f1": 0.806658073692164,
-        "support": 150,
-        "positive_support": 75,
-        "negative_support": 75,
-        "roc_auc": 0.909688888888889
+        "accuracy": 0.92,
+        "precision": 0.9362880886426593,
+        "recall": 0.9013333333333333,
+        "f1": 0.9184782608695652,
+        "macro_f1": 0.9199721147279762,
+        "support": 750,
+        "positive_support": 375,
+        "negative_support": 375,
+        "roc_auc": 0.9856142222222222
       }
     }
   ]

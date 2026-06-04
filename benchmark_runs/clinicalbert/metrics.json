@@ -1,96 +1,280 @@
 {
-  "created_at": "2026-05-29T22:40:05+00:00",
+  "created_at": "2026-06-04T03:23:26+00:00",
   "model_name": "emilyalsentzer/Bio_ClinicalBERT",
-  "device": "cuda",
+  "device": "cpu",
   "tasks": {
-    "diabetes": {
-      "accuracy": 0.9466666666666667,
-      "precision": 0.9855072463768116,
-      "recall": 0.9066666666666666,
-      "f1": 0.9444444444444444,
-      "macro_f1": 0.9465811965811965,
-      "support": 150,
-      "positive_support": 75,
-      "negative_support": 75,
-      "roc_auc": 0.9873777777777778,
-      "test_loss": 0.18957108867665132,
+    "asthma": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "macro_f1": 1.0,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 1.0,
+      "test_loss": 6.183236511424183e-05,
       "history": [
         {
           "epoch": 1,
-          "train_loss": 0.440880873969623,
-          "val_loss": 0.273038099805514,
+          "train_loss": 0.07207861759456241,
+          "val_loss": 6.248096837468134e-05,
           "val_metrics": {
-            "accuracy": 0.92,
-            "precision": 0.9701492537313433,
-            "recall": 0.8666666666666667,
-            "f1": 0.9154929577464789,
-            "macro_f1": 0.9197717953289357,
-            "support": 150,
-            "positive_support": 75,
-            "negative_support": 75,
-            "roc_auc": 0.9507555555555556
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "macro_f1": 1.0,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 1.0
           }
         },
         {
           "epoch": 2,
-          "train_loss": 0.16601775396083082,
-          "val_loss": 0.2721674547592799,
+          "train_loss": 7.600564031911614e-05,
+          "val_loss": 3.704907285282388e-05,
           "val_metrics": {
-            "accuracy": 0.9333333333333333,
+            "accuracy": 1.0,
             "precision": 1.0,
-            "recall": 0.8666666666666667,
-            "f1": 0.9285714285714286,
-            "macro_f1": 0.9330357142857143,
-            "support": 150,
-            "positive_support": 75,
-            "negative_support": 75,
-            "roc_auc": 0.9656888888888889
+            "recall": 1.0,
+            "f1": 1.0,
+            "macro_f1": 1.0,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 1.0
+          }
+        }
+      ]
+    },
+    "copd": {
+      "accuracy": 0.9973333333333333,
+      "precision": 1.0,
+      "recall": 0.9946666666666667,
+      "f1": 0.9973262032085561,
+      "macro_f1": 0.9973333143702355,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 0.9999573333333334,
+      "test_loss": 0.014512024272330261,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.0997254990904725,
+          "val_loss": 0.007679524657238895,
+          "val_metrics": {
+            "accuracy": 0.9986666666666667,
+            "precision": 1.0,
+            "recall": 0.9973333333333333,
+            "f1": 0.9986648865153538,
+            "macro_f1": 0.998666664296292,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.999872
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.0051116358458447005,
+          "val_loss": 0.007274306864943355,
+          "val_metrics": {
+            "accuracy": 0.9986666666666667,
+            "precision": 1.0,
+            "recall": 0.9973333333333333,
+            "f1": 0.9986648865153538,
+            "macro_f1": 0.998666664296292,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.9998648888888889
+          }
+        }
+      ]
+    },
+    "coronary_heart_disease": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "macro_f1": 1.0,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 1.0,
+      "test_loss": 7.973829792657247e-05,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.0998918361779901,
+          "val_loss": 0.008368031905032694,
+          "val_metrics": {
+            "accuracy": 0.9986666666666667,
+            "precision": 0.9973404255319149,
+            "recall": 1.0,
+            "f1": 0.9986684420772304,
+            "macro_f1": 0.998666664296292,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 1.0
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.00010134831310382911,
+          "val_loss": 0.009653432007694694,
+          "val_metrics": {
+            "accuracy": 0.9986666666666667,
+            "precision": 0.9973404255319149,
+            "recall": 1.0,
+            "f1": 0.9986684420772304,
+            "macro_f1": 0.998666664296292,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 1.0
+          }
+        }
+      ]
+    },
+    "diabetes": {
+      "accuracy": 0.9413333333333334,
+      "precision": 1.0,
+      "recall": 0.8826666666666667,
+      "f1": 0.9376770538243626,
+      "macro_f1": 0.9411307183479496,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 0.982976,
+      "test_loss": 0.21192533468951782,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.22316082063024598,
+          "val_loss": 0.16854011447479328,
+          "val_metrics": {
+            "accuracy": 0.9533333333333334,
+            "precision": 1.0,
+            "recall": 0.9066666666666666,
+            "f1": 0.951048951048951,
+            "macro_f1": 0.9532314818939023,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.9877119999999999
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.11310882073481168,
+          "val_loss": 0.15285386623317998,
+          "val_metrics": {
+            "accuracy": 0.9533333333333334,
+            "precision": 1.0,
+            "recall": 0.9066666666666666,
+            "f1": 0.951048951048951,
+            "macro_f1": 0.9532314818939023,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.990855111111111
           }
         }
       ]
     },
     "hypertension": {
-      "accuracy": 0.8466666666666667,
-      "precision": 0.825,
-      "recall": 0.88,
-      "f1": 0.8516129032258064,
-      "macro_f1": 0.846496106785317,
-      "support": 150,
-      "positive_support": 75,
-      "negative_support": 75,
-      "roc_auc": 0.907911111111111,
-      "test_loss": 0.393995734055837,
+      "accuracy": 0.912,
+      "precision": 0.8618266978922716,
+      "recall": 0.9813333333333333,
+      "f1": 0.9177057356608479,
+      "macro_f1": 0.9115749308676733,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 0.9761208888888889,
+      "test_loss": 0.24656536277135213,
       "history": [
         {
           "epoch": 1,
-          "train_loss": 0.557315867798669,
-          "val_loss": 0.42225644409656526,
+          "train_loss": 0.3729048761299678,
+          "val_loss": 0.19372319781780242,
           "val_metrics": {
-            "accuracy": 0.8133333333333334,
-            "precision": 0.7582417582417582,
-            "recall": 0.92,
-            "f1": 0.8313253012048193,
-            "macro_f1": 0.8111850386621111,
-            "support": 150,
-            "positive_support": 75,
-            "negative_support": 75,
-            "roc_auc": 0.9038222222222222
+            "accuracy": 0.9346666666666666,
+            "precision": 0.8975609756097561,
+            "recall": 0.9813333333333333,
+            "f1": 0.9375796178343949,
+            "macro_f1": 0.9345240746514631,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.9834879999999999
           }
         },
         {
           "epoch": 2,
-          "train_loss": 0.36340649675045694,
-          "val_loss": 0.38119805256525674,
+          "train_loss": 0.2054572566146297,
+          "val_loss": 0.20874880193670592,
           "val_metrics": {
-            "accuracy": 0.8066666666666666,
-            "precision": 0.8026315789473685,
-            "recall": 0.8133333333333334,
-            "f1": 0.8079470198675497,
-            "macro_f1": 0.806658073692164,
-            "support": 150,
-            "positive_support": 75,
-            "negative_support": 75,
-            "roc_auc": 0.909688888888889
+            "accuracy": 0.92,
+            "precision": 0.9362880886426593,
+            "recall": 0.9013333333333333,
+            "f1": 0.9184782608695652,
+            "macro_f1": 0.9199721147279762,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.9856142222222222
+          }
+        }
+      ]
+    },
+    "stroke": {
+      "accuracy": 0.7746666666666666,
+      "precision": 0.7696335078534031,
+      "recall": 0.784,
+      "f1": 0.7767503302509907,
+      "macro_f1": 0.7746470359195734,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 0.8963271111111111,
+      "test_loss": 0.3930125247637431,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.4753926986157894,
+          "val_loss": 0.38845757440725964,
+          "val_metrics": {
+            "accuracy": 0.78,
+            "precision": 0.8260869565217391,
+            "recall": 0.7093333333333334,
+            "f1": 0.763271162123386,
+            "macro_f1": 0.7788958550342957,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.8838897777777778
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.3634213913572686,
+          "val_loss": 0.3910693507194519,
+          "val_metrics": {
+            "accuracy": 0.7746666666666666,
+            "precision": 0.7754010695187166,
+            "recall": 0.7733333333333333,
+            "f1": 0.774365821094793,
+            "macro_f1": 0.7746662660733619,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.8948622222222222
           }
         }
       ]
