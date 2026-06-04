@@ -1398,7 +1398,13 @@ def run_plot(args: argparse.Namespace) -> Path:
     os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
 
     run_names = args.runs or ["baseline", "clinicalbert", "clinicalbert_inference"]
-    records = load_score_records(output_dir, run_names, args.metrics)
+    plot_metrics = [metric for metric in args.metrics if metric != "weighted_f1"]
+    if len(plot_metrics) != len(args.metrics):
+        info("Skipping weighted_f1 in plots; it remains available in metrics JSON.")
+    if not plot_metrics:
+        raise ValueError("No plottable metrics requested.")
+
+    records = load_score_records(output_dir, run_names, plot_metrics)
     summary_csv = plot_dir / "score_summary.csv"
     write_score_csv(summary_csv, records)
 
@@ -1424,15 +1430,14 @@ def run_plot(args: argparse.Namespace) -> Path:
         "specificity": "Specificity",
         "f1": "F1",
         "macro_f1": "Macro F1",
-        "weighted_f1": "Weighted F1",
         "roc_auc": "ROC AUC",
     }
     colors = ["#2f6f8f", "#c76f3a", "#5b8f5a", "#7b5ea7", "#b84a62"]
 
     fig_width = max(9.0, 2.2 * len(tasks))
-    fig_height = 3.2 * len(args.metrics)
+    fig_height = 3.2 * len(plot_metrics)
     fig, axes = plt.subplots(
-        len(args.metrics),
+        len(plot_metrics),
         1,
         figsize=(fig_width, fig_height),
         squeeze=False,
@@ -1442,7 +1447,7 @@ def run_plot(args: argparse.Namespace) -> Path:
     bar_width = min(0.8 / max(len(models), 1), 0.28)
     offsets = (np.arange(len(models)) - (len(models) - 1) / 2) * bar_width
 
-    for metric_index, metric_name in enumerate(args.metrics):
+    for metric_index, metric_name in enumerate(plot_metrics):
         ax = axes[metric_index][0]
         for model_index, model_name in enumerate(models):
             scores = [

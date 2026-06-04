@@ -229,7 +229,7 @@ Include it in the final comparison plot/table:
 python clinical_bert_test.py plot \
   --output-dir benchmark_runs/all_tasks \
   --runs clinicalbert clinicalbert_reward small_llm \
-  --metrics accuracy f1 macro_f1 weighted_f1 roc_auc
+  --metrics accuracy f1 macro_f1 roc_auc
 ```
 
 ## Default Tasks
