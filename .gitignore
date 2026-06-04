@@ -16,3 +16,4 @@ benchmark_runs/**
 !benchmark_runs/plots/
 !benchmark_runs/plots/scores.png
 !benchmark_runs/plots/score_summary.csv
+!benchmark_runs/plots/full_comparison.png

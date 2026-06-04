@@ -8,11 +8,23 @@ clinicalbert,ClinicalBERT fine-tuned,copd,roc_auc,0.9999573333333334
 clinicalbert,ClinicalBERT fine-tuned,coronary_heart_disease,accuracy,1.0
 clinicalbert,ClinicalBERT fine-tuned,coronary_heart_disease,f1,1.0
 clinicalbert,ClinicalBERT fine-tuned,coronary_heart_disease,roc_auc,1.0
+baseline,TF-IDF baseline,diabetes,accuracy,0.9733333333333334
 clinicalbert,ClinicalBERT fine-tuned,diabetes,accuracy,0.9413333333333334
+small_llm,Small LLM zero-shot,diabetes,accuracy,0.96
+small_llm,Small LLM one-shot,diabetes,accuracy,0.94
+baseline,TF-IDF baseline,diabetes,f1,0.972972972972973
 clinicalbert,ClinicalBERT fine-tuned,diabetes,f1,0.9376770538243626
+small_llm,Small LLM zero-shot,diabetes,f1,0.961038961038961
+small_llm,Small LLM one-shot,diabetes,f1,0.9426751592356688
+baseline,TF-IDF baseline,diabetes,roc_auc,0.9927111111111111
 clinicalbert,ClinicalBERT fine-tuned,diabetes,roc_auc,0.982976
+small_llm,Small LLM zero-shot,diabetes,roc_auc,0.9892444444444444
+small_llm,Small LLM one-shot,diabetes,roc_auc,0.9547555555555556
+baseline,TF-IDF baseline,hypertension,accuracy,0.9333333333333333
 clinicalbert,ClinicalBERT fine-tuned,hypertension,accuracy,0.912
+baseline,TF-IDF baseline,hypertension,f1,0.9315068493150684
 clinicalbert,ClinicalBERT fine-tuned,hypertension,f1,0.9177057356608479
+baseline,TF-IDF baseline,hypertension,roc_auc,0.9738666666666667
 clinicalbert,ClinicalBERT fine-tuned,hypertension,roc_auc,0.9761208888888889
 clinicalbert,ClinicalBERT fine-tuned,stroke,accuracy,0.7746666666666666
 clinicalbert,ClinicalBERT fine-tuned,stroke,f1,0.7767503302509907
