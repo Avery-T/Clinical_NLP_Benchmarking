@@ -1,0 +1,71 @@
+{
+  "created_at": "2026-05-29T22:17:09+00:00",
+  "data_roots": [
+    "Data"
+  ],
+  "csv_dirs": [
+    "Data/synthea_1m_fhir_3_0_May_24/output_1_20170524T232103/output_1/csv"
+  ],
+  "max_patients": 1000,
+  "balance": true,
+  "include_conditions_in_text": false,
+  "include_careplans_in_text": false,
+  "max_events_per_section": 40,
+  "seed": 13,
+  "tasks": {
+    "diabetes": {
+      "name": "diabetes",
+      "positive_regex": "\\bdiabetes\\b",
+      "description": "Patient has a diabetes condition in conditions.csv.",
+      "label_source": "conditions",
+      "selected_patients": 1000,
+      "positive_patients_available": 7245,
+      "split_counts": {
+        "train": {
+          "1": 350,
+          "0": 350
+        },
+        "val": {
+          "1": 75,
+          "0": 75
+        },
+        "test": {
+          "1": 75,
+          "0": 75
+        }
+      },
+      "files": {
+        "train": "benchmark_runs/prepared/diabetes/train.csv",
+        "val": "benchmark_runs/prepared/diabetes/val.csv",
+        "test": "benchmark_runs/prepared/diabetes/test.csv"
+      }
+    },
+    "hypertension": {
+      "name": "hypertension",
+      "positive_regex": "\\bhypertension\\b",
+      "description": "Patient has a hypertension condition in conditions.csv.",
+      "label_source": "conditions",
+      "selected_patients": 1000,
+      "positive_patients_available": 30068,
+      "split_counts": {
+        "train": {
+          "1": 350,
+          "0": 350
+        },
+        "val": {
+          "1": 75,
+          "0": 75
+        },
+        "test": {
+          "1": 75,
+          "0": 75
+        }
+      },
+      "files": {
+        "train": "benchmark_runs/prepared/hypertension/train.csv",
+        "val": "benchmark_runs/prepared/hypertension/val.csv",
+        "test": "benchmark_runs/prepared/hypertension/test.csv"
+      }
+    }
+  }
+}

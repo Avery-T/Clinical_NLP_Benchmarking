@@ -1,0 +1,283 @@
+{
+  "created_at": "2026-06-01T08:54:34+00:00",
+  "model_name": "emilyalsentzer/Bio_ClinicalBERT",
+  "device": "cuda",
+  "tasks": {
+    "asthma": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "macro_f1": 1.0,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 1.0,
+      "test_loss": 9.529460504806291e-05,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.07219451684772503,
+          "val_loss": 9.80322437050442e-05,
+          "val_metrics": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "macro_f1": 1.0,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 1.0
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.00010677772318013013,
+          "val_loss": 5.680757163402935e-05,
+          "val_metrics": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "macro_f1": 1.0,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 1.0
+          }
+        }
+      ]
+    },
+    "copd": {
+      "accuracy": 0.9973333333333333,
+      "precision": 1.0,
+      "recall": 0.9946666666666667,
+      "f1": 0.9973262032085561,
+      "macro_f1": 0.9973333143702355,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 0.9999217777777778,
+      "test_loss": 0.017454693858084888,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.10381999829165371,
+          "val_loss": 0.009798607810943698,
+          "val_metrics": {
+            "accuracy": 0.9986666666666667,
+            "precision": 1.0,
+            "recall": 0.9973333333333333,
+            "f1": 0.9986648865153538,
+            "macro_f1": 0.998666664296292,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.999808
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.0056071606805614595,
+          "val_loss": 0.008467637070377046,
+          "val_metrics": {
+            "accuracy": 0.9986666666666667,
+            "precision": 1.0,
+            "recall": 0.9973333333333333,
+            "f1": 0.9986648865153538,
+            "macro_f1": 0.998666664296292,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.9998151111111111
+          }
+        }
+      ]
+    },
+    "coronary_heart_disease": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "macro_f1": 1.0,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 1.0,
+      "test_loss": 6.005814671516419e-05,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.08570302440612743,
+          "val_loss": 6.735205406827541e-05,
+          "val_metrics": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "macro_f1": 1.0,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 1.0
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 7.624945015413686e-05,
+          "val_loss": 7.07283097532733e-05,
+          "val_metrics": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "macro_f1": 1.0,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 1.0
+          }
+        }
+      ]
+    },
+    "diabetes": {
+      "accuracy": 0.9413333333333334,
+      "precision": 1.0,
+      "recall": 0.8826666666666667,
+      "f1": 0.9376770538243626,
+      "macro_f1": 0.9411307183479496,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 0.9826986666666666,
+      "test_loss": 0.21759675347805024,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.23092810255116117,
+          "val_loss": 0.17991224991281826,
+          "val_metrics": {
+            "accuracy": 0.9533333333333334,
+            "precision": 1.0,
+            "recall": 0.9066666666666666,
+            "f1": 0.951048951048951,
+            "macro_f1": 0.9532314818939023,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.9894755555555557
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.11367411027067074,
+          "val_loss": 0.14744100738565127,
+          "val_metrics": {
+            "accuracy": 0.9533333333333334,
+            "precision": 1.0,
+            "recall": 0.9066666666666666,
+            "f1": 0.951048951048951,
+            "macro_f1": 0.9532314818939023,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.9914382222222222
+          }
+        }
+      ]
+    },
+    "hypertension": {
+      "accuracy": 0.908,
+      "precision": 0.8825,
+      "recall": 0.9413333333333334,
+      "f1": 0.9109677419354839,
+      "macro_f1": 0.9078976640711902,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 0.9800675555555556,
+      "test_loss": 0.2185419813444217,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.4045939557839717,
+          "val_loss": 0.23588423184553783,
+          "val_metrics": {
+            "accuracy": 0.9173333333333333,
+            "precision": 0.935933147632312,
+            "recall": 0.896,
+            "f1": 0.9155313351498637,
+            "macro_f1": 0.9172956936845924,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.9755377777777777
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.20424452075761343,
+          "val_loss": 0.1912119037831823,
+          "val_metrics": {
+            "accuracy": 0.9386666666666666,
+            "precision": 0.931758530183727,
+            "recall": 0.9466666666666667,
+            "f1": 0.9391534391534392,
+            "macro_f1": 0.938662741082096,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.9871217777777778
+          }
+        }
+      ]
+    },
+    "stroke": {
+      "accuracy": 0.7853333333333333,
+      "precision": 0.786096256684492,
+      "recall": 0.784,
+      "f1": 0.7850467289719626,
+      "macro_f1": 0.7853329517030252,
+      "support": 750,
+      "positive_support": 375,
+      "negative_support": 375,
+      "roc_auc": 0.9001244444444445,
+      "test_loss": 0.3651617112159729,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.4746135516166687,
+          "val_loss": 0.3760154027144114,
+          "val_metrics": {
+            "accuracy": 0.7786666666666666,
+            "precision": 0.8641114982578397,
+            "recall": 0.6613333333333333,
+            "f1": 0.7492447129909365,
+            "macro_f1": 0.7755770104334158,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.8940942222222223
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.3667095115312508,
+          "val_loss": 0.37496123373508455,
+          "val_metrics": {
+            "accuracy": 0.7653333333333333,
+            "precision": 0.7696476964769647,
+            "recall": 0.7573333333333333,
+            "f1": 0.7634408602150538,
+            "macro_f1": 0.7653183137054105,
+            "support": 750,
+            "positive_support": 375,
+            "negative_support": 375,
+            "roc_auc": 0.894200888888889
+          }
+        }
+      ]
+    }
+  }
+}

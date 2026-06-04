@@ -1,0 +1,179 @@
+{
+  "created_at": "2026-06-01T08:54:03+00:00",
+  "data_roots": [
+    "Data"
+  ],
+  "csv_dirs": [
+    "Data/synthea_1m_fhir_3_0_May_24/output_1_20170524T232103/output_1/csv"
+  ],
+  "max_patients": 5000,
+  "balance": true,
+  "include_conditions_in_text": false,
+  "include_careplans_in_text": false,
+  "max_events_per_section": 40,
+  "seed": 13,
+  "tasks": {
+    "diabetes": {
+      "name": "diabetes",
+      "positive_regex": "\\bdiabetes\\b",
+      "description": "Patient has a diabetes condition in conditions.csv.",
+      "label_source": "conditions",
+      "selected_patients": 5000,
+      "positive_patients_available": 7245,
+      "split_counts": {
+        "train": {
+          "1": 1750,
+          "0": 1750
+        },
+        "val": {
+          "0": 375,
+          "1": 375
+        },
+        "test": {
+          "0": 375,
+          "1": 375
+        }
+      },
+      "files": {
+        "train": "benchmark_runs/all_tasks/prepared/diabetes/train.csv",
+        "val": "benchmark_runs/all_tasks/prepared/diabetes/val.csv",
+        "test": "benchmark_runs/all_tasks/prepared/diabetes/test.csv"
+      }
+    },
+    "hypertension": {
+      "name": "hypertension",
+      "positive_regex": "\\bhypertension\\b",
+      "description": "Patient has a hypertension condition in conditions.csv.",
+      "label_source": "conditions",
+      "selected_patients": 5000,
+      "positive_patients_available": 30068,
+      "split_counts": {
+        "train": {
+          "1": 1750,
+          "0": 1750
+        },
+        "val": {
+          "0": 375,
+          "1": 375
+        },
+        "test": {
+          "0": 375,
+          "1": 375
+        }
+      },
+      "files": {
+        "train": "benchmark_runs/all_tasks/prepared/hypertension/train.csv",
+        "val": "benchmark_runs/all_tasks/prepared/hypertension/val.csv",
+        "test": "benchmark_runs/all_tasks/prepared/hypertension/test.csv"
+      }
+    },
+    "coronary_heart_disease": {
+      "name": "coronary_heart_disease",
+      "positive_regex": "\\bcoronary heart disease\\b|\\bmyocardial infarction\\b",
+      "description": "Patient has coronary heart disease or myocardial infarction.",
+      "label_source": "conditions",
+      "selected_patients": 5000,
+      "positive_patients_available": 8683,
+      "split_counts": {
+        "train": {
+          "1": 1750,
+          "0": 1750
+        },
+        "val": {
+          "0": 375,
+          "1": 375
+        },
+        "test": {
+          "0": 375,
+          "1": 375
+        }
+      },
+      "files": {
+        "train": "benchmark_runs/all_tasks/prepared/coronary_heart_disease/train.csv",
+        "val": "benchmark_runs/all_tasks/prepared/coronary_heart_disease/val.csv",
+        "test": "benchmark_runs/all_tasks/prepared/coronary_heart_disease/test.csv"
+      }
+    },
+    "stroke": {
+      "name": "stroke",
+      "positive_regex": "\\bstroke\\b",
+      "description": "Patient has a stroke condition in conditions.csv.",
+      "label_source": "conditions",
+      "selected_patients": 5000,
+      "positive_patients_available": 6111,
+      "split_counts": {
+        "train": {
+          "1": 1750,
+          "0": 1750
+        },
+        "val": {
+          "0": 375,
+          "1": 375
+        },
+        "test": {
+          "0": 375,
+          "1": 375
+        }
+      },
+      "files": {
+        "train": "benchmark_runs/all_tasks/prepared/stroke/train.csv",
+        "val": "benchmark_runs/all_tasks/prepared/stroke/val.csv",
+        "test": "benchmark_runs/all_tasks/prepared/stroke/test.csv"
+      }
+    },
+    "asthma": {
+      "name": "asthma",
+      "positive_regex": "\\basthma\\b",
+      "description": "Patient has asthma in conditions.csv.",
+      "label_source": "conditions",
+      "selected_patients": 5000,
+      "positive_patients_available": 5189,
+      "split_counts": {
+        "train": {
+          "1": 1750,
+          "0": 1750
+        },
+        "val": {
+          "0": 375,
+          "1": 375
+        },
+        "test": {
+          "0": 375,
+          "1": 375
+        }
+      },
+      "files": {
+        "train": "benchmark_runs/all_tasks/prepared/asthma/train.csv",
+        "val": "benchmark_runs/all_tasks/prepared/asthma/val.csv",
+        "test": "benchmark_runs/all_tasks/prepared/asthma/test.csv"
+      }
+    },
+    "copd": {
+      "name": "copd",
+      "positive_regex": "\\bchronic obstructive\\b|\\bpulmonary emphysema\\b|\\bcopd\\b",
+      "description": "Patient has COPD-like disease in conditions.csv.",
+      "label_source": "conditions",
+      "selected_patients": 5000,
+      "positive_patients_available": 8058,
+      "split_counts": {
+        "train": {
+          "1": 1750,
+          "0": 1750
+        },
+        "val": {
+          "0": 375,
+          "1": 375
+        },
+        "test": {
+          "0": 375,
+          "1": 375
+        }
+      },
+      "files": {
+        "train": "benchmark_runs/all_tasks/prepared/copd/train.csv",
+        "val": "benchmark_runs/all_tasks/prepared/copd/val.csv",
+        "test": "benchmark_runs/all_tasks/prepared/copd/test.csv"
+      }
+    }
+  }
+}

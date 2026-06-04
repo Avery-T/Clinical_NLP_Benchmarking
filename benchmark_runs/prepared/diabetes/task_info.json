@@ -1,0 +1,27 @@
+{
+  "name": "diabetes",
+  "positive_regex": "\\bdiabetes\\b",
+  "description": "Patient has a diabetes condition in conditions.csv.",
+  "label_source": "conditions",
+  "selected_patients": 1000,
+  "positive_patients_available": 7245,
+  "split_counts": {
+    "train": {
+      "1": 350,
+      "0": 350
+    },
+    "val": {
+      "1": 75,
+      "0": 75
+    },
+    "test": {
+      "1": 75,
+      "0": 75
+    }
+  },
+  "files": {
+    "train": "benchmark_runs/prepared/diabetes/train.csv",
+    "val": "benchmark_runs/prepared/diabetes/val.csv",
+    "test": "benchmark_runs/prepared/diabetes/test.csv"
+  }
+}

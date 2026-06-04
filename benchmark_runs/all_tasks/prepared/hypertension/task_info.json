@@ -1,0 +1,27 @@
+{
+  "name": "hypertension",
+  "positive_regex": "\\bhypertension\\b",
+  "description": "Patient has a hypertension condition in conditions.csv.",
+  "label_source": "conditions",
+  "selected_patients": 5000,
+  "positive_patients_available": 30068,
+  "split_counts": {
+    "train": {
+      "1": 1750,
+      "0": 1750
+    },
+    "val": {
+      "0": 375,
+      "1": 375
+    },
+    "test": {
+      "0": 375,
+      "1": 375
+    }
+  },
+  "files": {
+    "train": "benchmark_runs/all_tasks/prepared/hypertension/train.csv",
+    "val": "benchmark_runs/all_tasks/prepared/hypertension/val.csv",
+    "test": "benchmark_runs/all_tasks/prepared/hypertension/test.csv"
+  }
+}

@@ -1,0 +1,7 @@
+run,model,task,metric,score
+small_llm,Small LLM zero-shot,diabetes,accuracy,1.0
+small_llm,Small LLM one-shot,diabetes,accuracy,1.0
+small_llm,Small LLM zero-shot,diabetes,f1,1.0
+small_llm,Small LLM one-shot,diabetes,f1,1.0
+small_llm,Small LLM zero-shot,diabetes,roc_auc,1.0
+small_llm,Small LLM one-shot,diabetes,roc_auc,1.0

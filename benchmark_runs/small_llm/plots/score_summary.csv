@@ -1,0 +1,7 @@
+task,shot,metric,score
+diabetes,zero-shot,accuracy,0.96
+diabetes,zero-shot,f1,0.961038961038961
+diabetes,zero-shot,roc_auc,0.9892444444444444
+diabetes,one-shot,accuracy,0.94
+diabetes,one-shot,f1,0.9426751592356688
+diabetes,one-shot,roc_auc,0.9547555555555556

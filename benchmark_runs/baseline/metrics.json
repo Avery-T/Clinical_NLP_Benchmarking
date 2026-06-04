@@ -1,0 +1,81 @@
+{
+  "created_at": "2026-05-29T22:17:09+00:00",
+  "tasks": {
+    "diabetes": {
+      "accuracy": 0.9733333333333334,
+      "precision": 0.9863013698630136,
+      "recall": 0.96,
+      "f1": 0.972972972972973,
+      "macro_f1": 0.9733285917496444,
+      "support": 150,
+      "positive_support": 75,
+      "negative_support": 75,
+      "roc_auc": 0.9927111111111111,
+      "classification_report": {
+        "0": {
+          "precision": 0.961038961038961,
+          "recall": 0.9866666666666667,
+          "f1-score": 0.9736842105263158,
+          "support": 75.0
+        },
+        "1": {
+          "precision": 0.9863013698630136,
+          "recall": 0.96,
+          "f1-score": 0.972972972972973,
+          "support": 75.0
+        },
+        "accuracy": 0.9733333333333334,
+        "macro avg": {
+          "precision": 0.9736701654509874,
+          "recall": 0.9733333333333334,
+          "f1-score": 0.9733285917496444,
+          "support": 150.0
+        },
+        "weighted avg": {
+          "precision": 0.9736701654509875,
+          "recall": 0.9733333333333334,
+          "f1-score": 0.9733285917496445,
+          "support": 150.0
+        }
+      }
+    },
+    "hypertension": {
+      "accuracy": 0.9333333333333333,
+      "precision": 0.9577464788732394,
+      "recall": 0.9066666666666666,
+      "f1": 0.9315068493150684,
+      "macro_f1": 0.9332858921900018,
+      "support": 150,
+      "positive_support": 75,
+      "negative_support": 75,
+      "roc_auc": 0.9738666666666667,
+      "classification_report": {
+        "0": {
+          "precision": 0.9113924050632911,
+          "recall": 0.96,
+          "f1-score": 0.935064935064935,
+          "support": 75.0
+        },
+        "1": {
+          "precision": 0.9577464788732394,
+          "recall": 0.9066666666666666,
+          "f1-score": 0.9315068493150684,
+          "support": 75.0
+        },
+        "accuracy": 0.9333333333333333,
+        "macro avg": {
+          "precision": 0.9345694419682653,
+          "recall": 0.9333333333333333,
+          "f1-score": 0.9332858921900018,
+          "support": 150.0
+        },
+        "weighted avg": {
+          "precision": 0.9345694419682654,
+          "recall": 0.9333333333333333,
+          "f1-score": 0.9332858921900017,
+          "support": 150.0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "created_at": "2026-05-29T22:26:42+00:00",
+  "model_name": "emilyalsentzer/Bio_ClinicalBERT",
+  "device": "cuda",
+  "split": "all",
+  "max_length": 256,
+  "embedding_dims_written": 0,
+  "tasks": {
+    "diabetes": {
+      "rows_encoded": 1000,
+      "output_file": "benchmark_runs/clinicalbert_raw_outputs/diabetes/all_outputs.jsonl",
+      "embedding_width": 768
+    },
+    "hypertension": {
+      "rows_encoded": 1000,
+      "output_file": "benchmark_runs/clinicalbert_raw_outputs/hypertension/all_outputs.jsonl",
+      "embedding_width": 768
+    }
+  }
+}

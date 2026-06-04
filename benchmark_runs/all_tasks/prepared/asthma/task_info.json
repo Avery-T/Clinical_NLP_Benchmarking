@@ -1,0 +1,27 @@
+{
+  "name": "asthma",
+  "positive_regex": "\\basthma\\b",
+  "description": "Patient has asthma in conditions.csv.",
+  "label_source": "conditions",
+  "selected_patients": 5000,
+  "positive_patients_available": 5189,
+  "split_counts": {
+    "train": {
+      "1": 1750,
+      "0": 1750
+    },
+    "val": {
+      "0": 375,
+      "1": 375
+    },
+    "test": {
+      "0": 375,
+      "1": 375
+    }
+  },
+  "files": {
+    "train": "benchmark_runs/all_tasks/prepared/asthma/train.csv",
+    "val": "benchmark_runs/all_tasks/prepared/asthma/val.csv",
+    "test": "benchmark_runs/all_tasks/prepared/asthma/test.csv"
+  }
+}
