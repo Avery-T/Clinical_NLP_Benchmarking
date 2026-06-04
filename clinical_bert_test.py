@@ -23,6 +23,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     accuracy_score,
     classification_report,
+    confusion_matrix,
     f1_score,
     precision_recall_fscore_support,
     precision_score,
@@ -35,6 +36,7 @@ from sklearn.pipeline import Pipeline
 
 DEFAULT_MODEL_NAME = "emilyalsentzer/Bio_ClinicalBERT"
 DEFAULT_OUTPUT_DIR = "benchmark_runs"
+REWARD_RUN_NAME = "clinicalbert_reward"
 UUID_RE = re.compile(
     r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-"
     r"[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
@@ -651,6 +653,9 @@ def prepare_benchmark(args: argparse.Namespace) -> Path:
 
 
 def discover_prepared_tasks(prepared_dir: Path, requested: list[str] | None = None) -> list[Path]:
+    if (prepared_dir / "train.csv").exists() and (prepared_dir / "test.csv").exists():
+        return [prepared_dir]
+
     task_dirs = [
         path for path in sorted(prepared_dir.iterdir())
         if path.is_dir() and (path / "train.csv").exists() and (path / "test.csv").exists()
@@ -663,18 +668,56 @@ def discover_prepared_tasks(prepared_dir: Path, requested: list[str] | None = No
     return task_dirs
 
 
+def choose_column(columns: Iterable[str], preferred: list[str], kind: str, path: Path) -> str:
+    """Find a text or label column even if a teammate used a slightly different name."""
+    normalized = {column.lower().strip(): column for column in columns}
+    for candidate in preferred:
+        if candidate.lower() in normalized:
+            return normalized[candidate.lower()]
+    raise ValueError(
+        f"{path} is missing a {kind} column. Tried: {', '.join(preferred)}. "
+        f"Available columns: {', '.join(columns)}"
+    )
+
+
 def load_split(task_dir: Path, split: str) -> pd.DataFrame:
     path = task_dir / f"{split}.csv"
     if not path.exists():
         raise FileNotFoundError(f"Missing split file: {path}")
     df = pd.read_csv(path)
-    required = {"text", "label", "patient_id"}
-    missing = required - set(df.columns)
-    if missing:
-        raise ValueError(f"{path} is missing columns: {', '.join(sorted(missing))}")
-    df["text"] = df["text"].fillna("").astype(str)
-    df["label"] = df["label"].astype(int)
-    return df
+
+    text_col = choose_column(
+        df.columns,
+        ["text", "patient_text", "note", "notes", "clinical_text", "input_text"],
+        "text",
+        path,
+    )
+    label_col = choose_column(
+        df.columns,
+        ["label", "labels", "target", "class", "class_id", "diagnosis_label"],
+        "label",
+        path,
+    )
+    patient_col = None
+    try:
+        patient_col = choose_column(
+            df.columns,
+            ["patient_id", "patient", "id", "subject_id"],
+            "patient id",
+            path,
+        )
+    except ValueError:
+        patient_col = None
+
+    normalized = pd.DataFrame()
+    normalized["patient_id"] = (
+        df[patient_col].astype(str)
+        if patient_col is not None
+        else [f"{task_dir.name}_{split}_{index}" for index in range(len(df))]
+    )
+    normalized["text"] = df[text_col].fillna("").astype(str)
+    normalized["label"] = pd.to_numeric(df[label_col], errors="raise").astype(int)
+    return normalized
 
 
 def load_split_or_all(task_dir: Path, split: str) -> pd.DataFrame:
@@ -691,15 +734,48 @@ def load_split_or_all(task_dir: Path, split: str) -> pd.DataFrame:
     return df
 
 
-def binary_metrics(
+def infer_num_labels(*frames: pd.DataFrame) -> int:
+    labels = sorted(
+        {
+            int(label)
+            for frame in frames
+            for label in frame["label"].dropna().astype(int).tolist()
+        }
+    )
+    if not labels:
+        raise ValueError("Could not infer labels because no labels were found.")
+    expected = list(range(max(labels) + 1))
+    if labels != expected:
+        raise ValueError(
+            f"Labels must be zero-based contiguous class ids for cross entropy. "
+            f"Found labels {labels}, expected {expected}."
+        )
+    return max(labels) + 1
+
+
+def classification_metrics(
     labels: np.ndarray,
     predictions: np.ndarray,
     probabilities: np.ndarray | None = None,
 ) -> dict[str, Any]:
+    label_ids = sorted({int(value) for value in np.concatenate([labels, predictions])})
+    average = "binary" if label_ids == [0, 1] else "macro"
     precision, recall, f1, _ = precision_recall_fscore_support(
         labels,
         predictions,
-        average="binary",
+        average=average,
+        zero_division=0,
+    )
+    macro_precision, macro_recall, macro_f1, _ = precision_recall_fscore_support(
+        labels,
+        predictions,
+        average="macro",
+        zero_division=0,
+    )
+    weighted_precision, weighted_recall, weighted_f1, _ = precision_recall_fscore_support(
+        labels,
+        predictions,
+        average="weighted",
         zero_division=0,
     )
     metrics: dict[str, Any] = {
@@ -707,14 +783,100 @@ def binary_metrics(
         "precision": float(precision),
         "recall": float(recall),
         "f1": float(f1),
-        "macro_f1": float(f1_score(labels, predictions, average="macro", zero_division=0)),
+        "macro_precision": float(macro_precision),
+        "macro_recall": float(macro_recall),
+        "macro_f1": float(macro_f1),
+        "weighted_precision": float(weighted_precision),
+        "weighted_recall": float(weighted_recall),
+        "weighted_f1": float(weighted_f1),
+        "confusion_matrix": confusion_matrix(labels, predictions, labels=label_ids).tolist(),
+        "label_ids": label_ids,
+        "num_labels": len(label_ids),
+        "classification_report": classification_report(
+            labels,
+            predictions,
+            labels=label_ids,
+            digits=4,
+            zero_division=0,
+            output_dict=True,
+        ),
         "support": int(len(labels)),
-        "positive_support": int(np.sum(labels == 1)),
-        "negative_support": int(np.sum(labels == 0)),
     }
-    if probabilities is not None and len(np.unique(labels)) == 2:
-        metrics["roc_auc"] = float(roc_auc_score(labels, probabilities))
+    for label_id in label_ids:
+        metrics[f"class_{label_id}_support"] = int(np.sum(labels == label_id))
+    if label_ids == [0, 1]:
+        metrics["positive_support"] = int(np.sum(labels == 1))
+        metrics["negative_support"] = int(np.sum(labels == 0))
+        if probabilities is not None:
+            positive_scores = probabilities[:, 1] if probabilities.ndim == 2 else probabilities
+            metrics["roc_auc"] = float(roc_auc_score(labels, positive_scores))
     return metrics
+
+
+def binary_metrics(
+    labels: np.ndarray,
+    predictions: np.ndarray,
+    probabilities: np.ndarray | None = None,
+) -> dict[str, Any]:
+    return classification_metrics(labels, predictions, probabilities)
+
+
+def softmax_probabilities(logits: np.ndarray) -> np.ndarray:
+    shifted = logits - logits.max(axis=1, keepdims=True)
+    exp = np.exp(shifted)
+    return exp / exp.sum(axis=1, keepdims=True)
+
+
+def add_probability_columns(prediction_df: pd.DataFrame, probabilities: np.ndarray) -> pd.DataFrame:
+    if probabilities.ndim == 1:
+        prediction_df["probability"] = probabilities
+        return prediction_df
+    if probabilities.shape[1] == 2:
+        prediction_df["probability"] = probabilities[:, 1]
+    for label_id in range(probabilities.shape[1]):
+        prediction_df[f"probability_class_{label_id}"] = probabilities[:, label_id]
+    prediction_df["predicted_probability"] = probabilities.max(axis=1)
+    return prediction_df
+
+
+def reward_output_dir(output_root: Path) -> Path:
+    if output_root.name == REWARD_RUN_NAME:
+        return output_root
+    return output_root / REWARD_RUN_NAME
+
+
+def save_confusion_matrix_image(
+    matrix: list[list[int]],
+    labels: list[int],
+    output_path: Path,
+    title: str,
+) -> None:
+    os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(4.5, 4.0))
+    image = ax.imshow(matrix, cmap="Blues")
+    fig.colorbar(image, ax=ax, fraction=0.046, pad=0.04)
+    ax.set_title(title)
+    ax.set_xlabel("Predicted")
+    ax.set_ylabel("True")
+    ax.set_xticks(range(len(labels)))
+    ax.set_yticks(range(len(labels)))
+    ax.set_xticklabels(labels)
+    ax.set_yticklabels(labels)
+
+    for row_index, row in enumerate(matrix):
+        for col_index, value in enumerate(row):
+            ax.text(col_index, row_index, str(value), ha="center", va="center")
+
+    fig.tight_layout()
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_path, dpi=180, bbox_inches="tight")
+    plt.close(fig)
 
 
 def run_baseline(args: argparse.Namespace) -> dict[str, Any]:
@@ -846,9 +1008,10 @@ def make_torch_dataset_class(torch: Any, Dataset: Any) -> type:
 
 
 def softmax_positive(logits: np.ndarray) -> np.ndarray:
-    shifted = logits - logits.max(axis=1, keepdims=True)
-    exp = np.exp(shifted)
-    return exp[:, 1] / exp.sum(axis=1)
+    probabilities = softmax_probabilities(logits)
+    if probabilities.shape[1] < 2:
+        raise ValueError("Positive-class probability requires at least two labels.")
+    return probabilities[:, 1]
 
 
 def evaluate_torch_model(
@@ -875,10 +1038,60 @@ def evaluate_torch_model(
 
     logits = np.concatenate(all_logits)
     labels = np.concatenate(all_labels)
-    probabilities = softmax_positive(logits)
+    probabilities = softmax_probabilities(logits)
     predictions = np.argmax(logits, axis=1)
-    metrics = binary_metrics(labels, predictions, probabilities)
+    metrics = classification_metrics(labels, predictions, probabilities)
     return total_loss / max(total_count, 1), metrics, labels, predictions, probabilities
+
+
+def reward_weighted_classification_loss(
+    torch: Any,
+    logits: Any,
+    labels: Any,
+    args: argparse.Namespace,
+) -> tuple[Any, dict[str, float]]:
+    """Return cross-entropy loss scaled by a simple correctness/confidence reward.
+
+    This is reinforcement-learning-inspired, not full RL. The model still learns
+    from supervised labels, but each sample's loss is weighted by a reward signal
+    derived from the current prediction and confidence.
+    """
+    per_sample_loss = torch.nn.functional.cross_entropy(
+        logits,
+        labels,
+        reduction="none",
+    )
+
+    # Rewards are computed from detached probabilities so the reward calculation
+    # does not create a second gradient path through the model's own prediction.
+    with torch.no_grad():
+        probabilities = torch.softmax(logits, dim=1)
+        confidence, predictions = torch.max(probabilities, dim=1)
+        correct = predictions.eq(labels)
+
+        correct_reward = args.correct_reward + args.confidence_bonus * confidence
+        wrong_reward = args.wrong_reward - args.confidence_penalty * confidence
+        rewards = torch.where(correct, correct_reward, wrong_reward)
+
+        # Loss weights must be non-negative. Positive rewards reinforce correct
+        # examples, while negative rewards are treated as penalty magnitudes that
+        # make wrong predictions, especially confident ones, count more.
+        weight_signal = torch.where(rewards >= 0, rewards, torch.abs(rewards))
+        weights = 1.0 + args.reward_scale * weight_signal
+        weights = torch.clamp(
+            weights,
+            min=args.min_reward_weight,
+            max=args.max_reward_weight,
+        )
+
+    weighted_loss = (per_sample_loss * weights).mean()
+    stats = {
+        "mean_reward": float(rewards.mean().detach().cpu().item()),
+        "mean_reward_weight": float(weights.mean().detach().cpu().item()),
+        "mean_confidence": float(confidence.mean().detach().cpu().item()),
+        "batch_accuracy": float(correct.float().mean().detach().cpu().item()),
+    }
+    return weighted_loss, stats
 
 
 def iter_batch_indices(total: int, batch_size: int) -> Iterable[tuple[int, int]]:
@@ -1100,8 +1313,8 @@ def run_infer(args: argparse.Namespace) -> dict[str, Any]:
         task_output = output_dir / task_dir.name
         task_output.mkdir(parents=True, exist_ok=True)
         prediction_df = df[["patient_id", "split", "label"]].copy()
-        prediction_df["probability"] = probabilities
         prediction_df["prediction"] = predictions
+        prediction_df = add_probability_columns(prediction_df, probabilities)
         prediction_df.to_csv(task_output / f"{args.split}_predictions.csv", index=False)
         with (task_output / "metrics.json").open("w", encoding="utf-8") as handle:
             json.dump(metrics, handle, indent=2)
@@ -1121,6 +1334,8 @@ def display_run_name(name: str) -> str:
     names = {
         "baseline": "TF-IDF baseline",
         "clinicalbert": "ClinicalBERT fine-tuned",
+        "clinicalbert_reward": "ClinicalBERT reward-weighted",
+        "clinicalbert_reward_weighted": "ClinicalBERT reward-weighted",
         "clinicalbert_inference": "ClinicalBERT inference",
         "small_llm": "Small LLM",
     }
@@ -1209,6 +1424,7 @@ def run_plot(args: argparse.Namespace) -> Path:
         "specificity": "Specificity",
         "f1": "F1",
         "macro_f1": "Macro F1",
+        "weighted_f1": "Weighted F1",
         "roc_auc": "ROC AUC",
     }
     colors = ["#2f6f8f", "#c76f3a", "#5b8f5a", "#7b5ea7", "#b84a62"]
@@ -1306,6 +1522,7 @@ def run_clinicalbert(args: argparse.Namespace) -> dict[str, Any]:
         train_df = load_split(task_dir, "train")
         val_df = load_split(task_dir, "val")
         test_df = load_split(task_dir, "test")
+        num_labels = infer_num_labels(train_df, val_df, test_df)
 
         tokenizer = AutoTokenizer.from_pretrained(
             args.model_name,
@@ -1313,7 +1530,7 @@ def run_clinicalbert(args: argparse.Namespace) -> dict[str, Any]:
         )
         model = AutoModelForSequenceClassification.from_pretrained(
             args.model_name,
-            num_labels=2,
+            num_labels=num_labels,
             local_files_only=args.local_files_only,
             use_safetensors=False,
         )
@@ -1438,8 +1655,8 @@ def run_clinicalbert(args: argparse.Namespace) -> dict[str, Any]:
         task_output = output_dir / task_dir.name
         task_output.mkdir(parents=True, exist_ok=True)
         prediction_df = test_df[["patient_id", "label"]].copy()
-        prediction_df["probability"] = probabilities
         prediction_df["prediction"] = predictions
+        prediction_df = add_probability_columns(prediction_df, probabilities)
         prediction_df.to_csv(task_output / "predictions.csv", index=False)
         with (task_output / "metrics.json").open("w", encoding="utf-8") as handle:
             json.dump(test_metrics, handle, indent=2)
@@ -1457,6 +1674,249 @@ def run_clinicalbert(args: argparse.Namespace) -> dict[str, Any]:
     with (output_dir / "metrics.json").open("w", encoding="utf-8") as handle:
         json.dump(results, handle, indent=2)
     info(f"ClinicalBERT results written to {output_dir}")
+    return results
+
+
+def run_reward_weighted_clinicalbert(args: argparse.Namespace) -> dict[str, Any]:
+    torch, DataLoader, Dataset, transformers_objects = require_clinicalbert_dependencies()
+    AutoModelForSequenceClassification, AutoTokenizer, get_linear_schedule_with_warmup = (
+        transformers_objects
+    )
+    TextDataset = make_torch_dataset_class(torch, Dataset)
+
+    prepared_dir = Path(args.prepared_dir)
+    output_dir = reward_output_dir(Path(args.output_dir))
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    device = torch.device("cuda" if torch.cuda.is_available() and not args.cpu else "cpu")
+    info(f"Using device: {device}")
+    info(
+        "Running reward-weighted ClinicalBERT fine-tuning. This is supervised "
+        "classification with reward-based loss weights, not full reinforcement learning."
+    )
+
+    torch.manual_seed(args.seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(args.seed)
+
+    reward_config = {
+        "correct_reward": args.correct_reward,
+        "wrong_reward": args.wrong_reward,
+        "confidence_bonus": args.confidence_bonus,
+        "confidence_penalty": args.confidence_penalty,
+        "reward_scale": args.reward_scale,
+        "min_reward_weight": args.min_reward_weight,
+        "max_reward_weight": args.max_reward_weight,
+    }
+    results: dict[str, Any] = {
+        "created_at": utc_now(),
+        "model_name": args.model_name,
+        "device": str(device),
+        "reward_config": reward_config,
+        "tasks": {},
+    }
+
+    for task_dir in discover_prepared_tasks(prepared_dir, args.tasks):
+        info(f"Reward-weighted fine-tuning ClinicalBERT for {task_dir.name}")
+        train_df = load_split(task_dir, "train")
+        val_df = load_split(task_dir, "val")
+        test_df = load_split(task_dir, "test")
+        num_labels = infer_num_labels(train_df, val_df, test_df)
+        info(f"  detected {num_labels} label(s) from prepared CSV files")
+
+        # Use the same tokenizer/checkpoint and prepared train/val/test CSVs as
+        # the standard ClinicalBERT benchmark so metrics are directly comparable.
+        tokenizer = AutoTokenizer.from_pretrained(
+            args.model_name,
+            local_files_only=args.local_files_only,
+        )
+        model = AutoModelForSequenceClassification.from_pretrained(
+            args.model_name,
+            num_labels=num_labels,
+            local_files_only=args.local_files_only,
+            use_safetensors=False,
+        )
+        model.to(device)
+
+        train_dataset = TextDataset(
+            train_df["text"].tolist(),
+            train_df["label"].astype(int).tolist(),
+            tokenizer,
+            args.max_length,
+        )
+        val_dataset = TextDataset(
+            val_df["text"].tolist(),
+            val_df["label"].astype(int).tolist(),
+            tokenizer,
+            args.max_length,
+        )
+        test_dataset = TextDataset(
+            test_df["text"].tolist(),
+            test_df["label"].astype(int).tolist(),
+            tokenizer,
+            args.max_length,
+        )
+
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=args.batch_size,
+            shuffle=True,
+            num_workers=args.num_workers,
+        )
+        val_loader = DataLoader(
+            val_dataset,
+            batch_size=args.eval_batch_size,
+            shuffle=False,
+            num_workers=args.num_workers,
+        )
+        test_loader = DataLoader(
+            test_dataset,
+            batch_size=args.eval_batch_size,
+            shuffle=False,
+            num_workers=args.num_workers,
+        )
+
+        optimizer = torch.optim.AdamW(
+            model.parameters(),
+            lr=args.learning_rate,
+            weight_decay=args.weight_decay,
+        )
+        total_steps = len(train_loader) * args.epochs
+        warmup_steps = int(total_steps * args.warmup_ratio)
+        scheduler = get_linear_schedule_with_warmup(
+            optimizer,
+            num_warmup_steps=warmup_steps,
+            num_training_steps=total_steps,
+        )
+
+        best_val_f1 = -1.0
+        best_state: dict[str, Any] | None = None
+        history: list[dict[str, Any]] = []
+
+        for epoch in range(1, args.epochs + 1):
+            model.train()
+            train_loss = 0.0
+            train_count = 0
+            reward_totals = {
+                "mean_reward": 0.0,
+                "mean_reward_weight": 0.0,
+                "mean_confidence": 0.0,
+                "batch_accuracy": 0.0,
+            }
+
+            for step, batch in enumerate(train_loader, start=1):
+                batch = {key: value.to(device) for key, value in batch.items()}
+                labels = batch["labels"]
+                model_inputs = {
+                    key: value
+                    for key, value in batch.items()
+                    if key != "labels"
+                }
+
+                # Forward pass followed by reward-weighted cross entropy.
+                outputs = model(**model_inputs)
+                loss, reward_stats = reward_weighted_classification_loss(
+                    torch,
+                    outputs.logits,
+                    labels,
+                    args,
+                )
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
+                optimizer.step()
+                scheduler.step()
+                optimizer.zero_grad()
+
+                batch_size = int(labels.size(0))
+                train_loss += float(loss.item()) * batch_size
+                train_count += batch_size
+                for key, value in reward_stats.items():
+                    reward_totals[key] += value * batch_size
+
+                if args.logging_steps and step % args.logging_steps == 0:
+                    info(
+                        f"  epoch {epoch} step {step}/{len(train_loader)} "
+                        f"loss={train_loss / max(train_count, 1):.4f}, "
+                        f"reward={reward_totals['mean_reward'] / max(train_count, 1):.3f}, "
+                        f"weight={reward_totals['mean_reward_weight'] / max(train_count, 1):.3f}"
+                    )
+
+            val_loss, val_metrics, _, _, _ = evaluate_torch_model(
+                torch,
+                model,
+                val_loader,
+                device,
+            )
+            epoch_record = {
+                "epoch": epoch,
+                "train_loss": train_loss / max(train_count, 1),
+                "mean_reward": reward_totals["mean_reward"] / max(train_count, 1),
+                "mean_reward_weight": (
+                    reward_totals["mean_reward_weight"] / max(train_count, 1)
+                ),
+                "mean_confidence": reward_totals["mean_confidence"] / max(train_count, 1),
+                "train_batch_accuracy": reward_totals["batch_accuracy"] / max(train_count, 1),
+                "val_loss": val_loss,
+                "val_metrics": val_metrics,
+            }
+            history.append(epoch_record)
+            info(
+                f"  epoch {epoch}: train_loss={epoch_record['train_loss']:.4f}, "
+                f"mean_reward={epoch_record['mean_reward']:.3f}, "
+                f"val_loss={val_loss:.4f}, val_f1={val_metrics['f1']:.3f}"
+            )
+
+            if val_metrics["f1"] > best_val_f1:
+                best_val_f1 = val_metrics["f1"]
+                best_state = {
+                    key: value.detach().cpu().clone()
+                    for key, value in model.state_dict().items()
+                }
+
+        if best_state is not None:
+            model.load_state_dict(best_state)
+
+        test_loss, test_metrics, labels, predictions, probabilities = evaluate_torch_model(
+            torch,
+            model,
+            test_loader,
+            device,
+        )
+        test_metrics["test_loss"] = test_loss
+        test_metrics["history"] = history
+        test_metrics["reward_config"] = reward_config
+        results["tasks"][task_dir.name] = test_metrics
+
+        task_output = output_dir / task_dir.name
+        task_output.mkdir(parents=True, exist_ok=True)
+        prediction_df = test_df[["patient_id", "label"]].copy()
+        prediction_df["prediction"] = predictions
+        prediction_df = add_probability_columns(prediction_df, probabilities)
+        prediction_df.to_csv(task_output / "predictions.csv", index=False)
+        with (task_output / "metrics.json").open("w", encoding="utf-8") as handle:
+            json.dump(test_metrics, handle, indent=2)
+        save_confusion_matrix_image(
+            matrix=test_metrics["confusion_matrix"],
+            labels=test_metrics["label_ids"],
+            output_path=task_output / "confusion_matrix.png",
+            title=f"{task_dir.name} Reward-Weighted ClinicalBERT",
+        )
+
+        # Save the trained checkpoint so it can be reloaded later with the
+        # regular `infer` command or compared in a final report.
+        if args.save_model:
+            model.save_pretrained(task_output / "model")
+            tokenizer.save_pretrained(task_output / "model")
+
+        info(
+            f"Reward-weighted ClinicalBERT {task_dir.name}: "
+            f"accuracy={test_metrics['accuracy']:.3f}, f1={test_metrics['f1']:.3f}, "
+            f"roc_auc={test_metrics.get('roc_auc', float('nan')):.3f}"
+        )
+
+    with (output_dir / "metrics.json").open("w", encoding="utf-8") as handle:
+        json.dump(results, handle, indent=2)
+    info(f"Reward-weighted ClinicalBERT results written to {output_dir}")
     return results
 
 
@@ -1525,6 +1985,74 @@ def add_clinicalbert_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--save-model", action="store_true")
 
 
+def add_reward_weighted_args(parser: argparse.ArgumentParser) -> None:
+    add_clinicalbert_args(parser)
+    parser.set_defaults(
+        save_model=True,
+        prepared_dir=f"{DEFAULT_OUTPUT_DIR}/all_tasks/prepared",
+        output_dir=f"{DEFAULT_OUTPUT_DIR}/all_tasks",
+    )
+    parser.add_argument(
+        "--data-dir",
+        "--data_dir",
+        dest="prepared_dir",
+        help="Alias for --prepared-dir; points to prepared train/val/test CSVs.",
+    )
+    parser.add_argument(
+        "--output_dir",
+        dest="output_dir",
+        help="Alias for --output-dir.",
+    )
+    parser.add_argument(
+        "--no-save-model",
+        dest="save_model",
+        action="store_false",
+        help="Skip saving the trained reward-weighted checkpoint.",
+    )
+    parser.add_argument(
+        "--correct-reward",
+        type=float,
+        default=1.0,
+        help="Base reward when the current prediction matches the true label.",
+    )
+    parser.add_argument(
+        "--wrong-reward",
+        type=float,
+        default=-0.5,
+        help="Base reward/penalty when the current prediction is wrong.",
+    )
+    parser.add_argument(
+        "--confidence-bonus",
+        type=float,
+        default=0.5,
+        help="Additional reward scaled by confidence for correct predictions.",
+    )
+    parser.add_argument(
+        "--confidence-penalty",
+        type=float,
+        default=0.5,
+        help="Additional penalty scaled by confidence for wrong predictions.",
+    )
+    parser.add_argument(
+        "--reward-scale",
+        type=float,
+        default=0.5,
+        help="How strongly rewards change the per-sample loss weight.",
+    )
+    parser.add_argument(
+        "--min-reward-weight",
+        type=float,
+        default=0.25,
+        help="Lower bound for reward-derived loss weights.",
+    )
+    parser.add_argument(
+        "--max-reward-weight",
+        type=float,
+        default=2.0,
+        help="Upper bound for reward-derived loss weights.",
+    )
+
+
 def add_encode_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--prepared-dir", default=f"{DEFAULT_OUTPUT_DIR}/prepared")
     parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR)
@@ -1572,7 +2100,10 @@ def add_plot_args(parser: argparse.ArgumentParser) -> None:
         "--runs",
         nargs="*",
         default=None,
-        help="Metric run directories to include, for example baseline clinicalbert small_llm.",
+        help=(
+            "Metric run directories to include, for example baseline clinicalbert "
+            "clinicalbert_reward small_llm."
+        ),
     )
     parser.add_argument(
         "--metrics",
@@ -1600,6 +2131,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Fine-tune a ClinicalBERT classifier head on prepared tasks.",
     )
     add_clinicalbert_args(clinicalbert_parser)
+
+    reward_parser = subparsers.add_parser(
+        "clinicalbert-reward",
+        help="Fine-tune ClinicalBERT with reward-weighted supervised loss.",
+    )
+    add_reward_weighted_args(reward_parser)
 
     encode_parser = subparsers.add_parser(
         "encode",
@@ -1663,6 +2200,8 @@ def main(argv: list[str] | None = None) -> int:
             run_baseline(args)
         elif args.command == "clinicalbert":
             run_clinicalbert(args)
+        elif args.command == "clinicalbert-reward":
+            run_reward_weighted_clinicalbert(args)
         elif args.command == "encode":
             run_encode(args)
         elif args.command == "infer":

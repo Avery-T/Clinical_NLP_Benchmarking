@@ -1,55 +1,103 @@
 run,model,task,metric,score
 clinicalbert,ClinicalBERT fine-tuned,asthma,accuracy,1.0
+clinicalbert_reward,ClinicalBERT reward-weighted,asthma,accuracy,0.9826666666666667
 small_llm,Small LLM zero-shot,asthma,accuracy,0.9746328437917223
 small_llm,Small LLM one-shot,asthma,accuracy,0.976
 clinicalbert,ClinicalBERT fine-tuned,asthma,f1,1.0
+clinicalbert_reward,ClinicalBERT reward-weighted,asthma,f1,0.9825970548862115
 small_llm,Small LLM zero-shot,asthma,f1,0.9752925877763329
 small_llm,Small LLM one-shot,asthma,f1,0.9765625
+clinicalbert,ClinicalBERT fine-tuned,asthma,macro_f1,1.0
+clinicalbert_reward,ClinicalBERT reward-weighted,asthma,macro_f1,0.9826663893288959
+small_llm,Small LLM zero-shot,asthma,macro_f1,0.9746147438195794
+small_llm,Small LLM one-shot,asthma,macro_f1,0.9759861680327868
 clinicalbert,ClinicalBERT fine-tuned,asthma,roc_auc,1.0
+clinicalbert_reward,ClinicalBERT reward-weighted,asthma,roc_auc,0.9969991111111111
 small_llm,Small LLM zero-shot,asthma,roc_auc,0.9910909090909091
 small_llm,Small LLM one-shot,asthma,roc_auc,0.9833493333333334
+clinicalbert_reward,ClinicalBERT reward-weighted,asthma,weighted_f1,0.982666389328896
 clinicalbert,ClinicalBERT fine-tuned,copd,accuracy,0.9973333333333333
+clinicalbert_reward,ClinicalBERT reward-weighted,copd,accuracy,0.8813333333333333
 small_llm,Small LLM zero-shot,copd,accuracy,0.968
 small_llm,Small LLM one-shot,copd,accuracy,0.9131034482758621
 clinicalbert,ClinicalBERT fine-tuned,copd,f1,0.9973262032085561
+clinicalbert_reward,ClinicalBERT reward-weighted,copd,f1,0.8755244755244755
 small_llm,Small LLM zero-shot,copd,f1,0.967032967032967
 small_llm,Small LLM one-shot,copd,f1,0.9052631578947368
+clinicalbert,ClinicalBERT fine-tuned,copd,macro_f1,0.9973333143702355
+clinicalbert_reward,ClinicalBERT reward-weighted,copd,macro_f1,0.8810743396730658
+small_llm,Small LLM zero-shot,copd,macro_f1,0.9679724420657063
+small_llm,Small LLM one-shot,copd,macro_f1,0.9125041904123365
 clinicalbert,ClinicalBERT fine-tuned,copd,roc_auc,0.9999217777777778
+clinicalbert_reward,ClinicalBERT reward-weighted,copd,roc_auc,0.9389368888888889
 small_llm,Small LLM zero-shot,copd,roc_auc,0.9929564444444444
 small_llm,Small LLM one-shot,copd,roc_auc,0.9613367934005054
+clinicalbert_reward,ClinicalBERT reward-weighted,copd,weighted_f1,0.8810743396730659
 clinicalbert,ClinicalBERT fine-tuned,coronary_heart_disease,accuracy,1.0
+clinicalbert_reward,ClinicalBERT reward-weighted,coronary_heart_disease,accuracy,0.896
 small_llm,Small LLM zero-shot,coronary_heart_disease,accuracy,0.892
 small_llm,Small LLM one-shot,coronary_heart_disease,accuracy,0.9413333333333334
 clinicalbert,ClinicalBERT fine-tuned,coronary_heart_disease,f1,1.0
+clinicalbert_reward,ClinicalBERT reward-weighted,coronary_heart_disease,f1,0.8913649025069638
 small_llm,Small LLM zero-shot,coronary_heart_disease,f1,0.9001233045622689
 small_llm,Small LLM one-shot,coronary_heart_disease,f1,0.940700808625337
+clinicalbert,ClinicalBERT fine-tuned,coronary_heart_disease,macro_f1,1.0
+clinicalbert_reward,ClinicalBERT reward-weighted,coronary_heart_disease,macro_f1,0.8958103284913335
+small_llm,Small LLM zero-shot,coronary_heart_disease,macro_f1,0.8912808104814247
+small_llm,Small LLM one-shot,coronary_heart_disease,macro_f1,0.9413266576108215
 clinicalbert,ClinicalBERT fine-tuned,coronary_heart_disease,roc_auc,1.0
+clinicalbert_reward,ClinicalBERT reward-weighted,coronary_heart_disease,roc_auc,0.9651839999999999
 small_llm,Small LLM zero-shot,coronary_heart_disease,roc_auc,0.9620444444444444
 small_llm,Small LLM one-shot,coronary_heart_disease,roc_auc,0.9716480000000001
+clinicalbert_reward,ClinicalBERT reward-weighted,coronary_heart_disease,weighted_f1,0.8958103284913335
 clinicalbert,ClinicalBERT fine-tuned,diabetes,accuracy,0.9413333333333334
+clinicalbert_reward,ClinicalBERT reward-weighted,diabetes,accuracy,0.8266666666666667
 small_llm,Small LLM zero-shot,diabetes,accuracy,0.931909212283044
 small_llm,Small LLM one-shot,diabetes,accuracy,0.8985115020297699
 clinicalbert,ClinicalBERT fine-tuned,diabetes,f1,0.9376770538243626
+clinicalbert_reward,ClinicalBERT reward-weighted,diabetes,f1,0.7993827160493827
 small_llm,Small LLM zero-shot,diabetes,f1,0.9355246523388117
 small_llm,Small LLM one-shot,diabetes,f1,0.9075215782983972
+clinicalbert,ClinicalBERT fine-tuned,diabetes,macro_f1,0.9411307183479496
+clinicalbert_reward,ClinicalBERT reward-weighted,diabetes,macro_f1,0.8234002782124847
+small_llm,Small LLM zero-shot,diabetes,macro_f1,0.9316944336658697
+small_llm,Small LLM one-shot,diabetes,macro_f1,0.8975389000937264
 clinicalbert,ClinicalBERT fine-tuned,diabetes,roc_auc,0.9826986666666666
+clinicalbert_reward,ClinicalBERT reward-weighted,diabetes,roc_auc,0.9029546666666666
 small_llm,Small LLM zero-shot,diabetes,roc_auc,0.9809625668449197
 small_llm,Small LLM one-shot,diabetes,roc_auc,0.9607244890484214
+clinicalbert_reward,ClinicalBERT reward-weighted,diabetes,weighted_f1,0.8234002782124847
 clinicalbert,ClinicalBERT fine-tuned,hypertension,accuracy,0.908
+clinicalbert_reward,ClinicalBERT reward-weighted,hypertension,accuracy,0.584
 small_llm,Small LLM zero-shot,hypertension,accuracy,0.7228915662650602
 small_llm,Small LLM one-shot,hypertension,accuracy,0.7812080536912752
 clinicalbert,ClinicalBERT fine-tuned,hypertension,f1,0.9109677419354839
+clinicalbert_reward,ClinicalBERT reward-weighted,hypertension,f1,0.6630669546436285
 small_llm,Small LLM zero-shot,hypertension,f1,0.761795166858458
 small_llm,Small LLM one-shot,hypertension,f1,0.8033775633293124
+clinicalbert,ClinicalBERT fine-tuned,hypertension,macro_f1,0.9078976640711902
+clinicalbert_reward,ClinicalBERT reward-weighted,hypertension,macro_f1,0.5597564738374937
+small_llm,Small LLM zero-shot,hypertension,macro_f1,0.715297583429229
+small_llm,Small LLM one-shot,hypertension,macro_f1,0.7783907483817515
 clinicalbert,ClinicalBERT fine-tuned,hypertension,roc_auc,0.9800675555555556
+clinicalbert_reward,ClinicalBERT reward-weighted,hypertension,roc_auc,0.6397226666666667
 small_llm,Small LLM zero-shot,hypertension,roc_auc,0.8696953405017921
 small_llm,Small LLM one-shot,hypertension,roc_auc,0.8783747747747748
+clinicalbert_reward,ClinicalBERT reward-weighted,hypertension,weighted_f1,0.5597564738374937
 clinicalbert,ClinicalBERT fine-tuned,stroke,accuracy,0.7853333333333333
+clinicalbert_reward,ClinicalBERT reward-weighted,stroke,accuracy,0.7373333333333333
 small_llm,Small LLM zero-shot,stroke,accuracy,0.6328437917222964
 small_llm,Small LLM one-shot,stroke,accuracy,0.7322623828647925
 clinicalbert,ClinicalBERT fine-tuned,stroke,f1,0.7850467289719626
+clinicalbert_reward,ClinicalBERT reward-weighted,stroke,f1,0.7252440725244073
 small_llm,Small LLM zero-shot,stroke,f1,0.4210526315789474
 small_llm,Small LLM one-shot,stroke,f1,0.635036496350365
+clinicalbert,ClinicalBERT fine-tuned,stroke,macro_f1,0.7853329517030252
+clinicalbert_reward,ClinicalBERT reward-weighted,stroke,macro_f1,0.736823824257095
+small_llm,Small LLM zero-shot,stroke,macro_f1,0.576117713638936
+small_llm,Small LLM one-shot,stroke,macro_f1,0.7118100029320535
 clinicalbert,ClinicalBERT fine-tuned,stroke,roc_auc,0.9001244444444445
+clinicalbert_reward,ClinicalBERT reward-weighted,stroke,roc_auc,0.8282595555555554
 small_llm,Small LLM zero-shot,stroke,roc_auc,0.754096256684492
 small_llm,Small LLM one-shot,stroke,roc_auc,0.7548135510601998
+clinicalbert_reward,ClinicalBERT reward-weighted,stroke,weighted_f1,0.7368238242570951
